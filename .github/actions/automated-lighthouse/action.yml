@@ -1,0 +1,119 @@
+name: 'Lighthouse Run'
+description: 'Run Lighthouse CLI on specified URLs and upload the results to a google spreadsheet'
+inputs:
+  urls:
+    description: 'URLs to audit'
+    required: true
+  budgetPath:
+    description: 'Path to a JSON file with performance budgets'
+  lighthousercPath:
+    description: 'Path to a JSON file with Lighthouse config'
+  googleSpreadsheetId:
+    description: 'ID of the google spreadsheet to upload the results to'
+    required: true
+  googleServiceAccountEmail:
+    description: 'Email of the google service account to use to authenticate to the google spreadsheet'
+    required: true
+  googlePrivateKey:
+    description: 'Private key of the google service account to use to authenticate to the google spreadsheet'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          run_install: false
+          version: ^7.12.1
+
+      - name: Install Puppeteer
+        shell: bash
+        run: |
+          pnpm add puppeteer
+
+      - name: Audit URLs using Lighthouse
+        id: lighthouse
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          urls: ${{ inputs.urls }}
+          budgetPath: ${{ inputs.budgetPath }}
+          uploadArtifacts: true # save results as an action artifacts
+          configPath: ${{ inputs.lighthousercPath }}
+          runs: 3
+
+      - name: Install Puppeteer
+        shell: bash
+        run: |
+          pnpm add google-spreadsheet
+
+      - name: Test lighthouse
+        uses: actions/github-script@v6
+        if: always()
+        env:
+          LIGHTHOUSE_OUTPUT: "${{ toJson(steps.lighthouse.outputs) }}"
+          GOOGLE_SPREADSHEET_ID: ${{ inputs.googleSpreadsheetId }}
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ inputs.googleServiceAccountEmail }}
+          GOOGLE_PRIVATE_KEY: ${{ inputs.googlePrivateKey }}
+        with:
+          script: |
+            const { GoogleSpreadsheet } = require('google-spreadsheet');
+
+            const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
+            await doc.useServiceAccountAuth({
+              client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+              private_key: process.env.GOOGLE_PRIVATE_KEY,
+            });
+            await doc.loadInfo()
+
+            const sheet = doc.sheetsByTitle['Raw data']
+
+
+            const lighthouseData = JSON.parse(process.env.LIGHTHOUSE_OUTPUT)
+            const manifest = JSON.parse(lighthouseData.manifest)
+            
+            const rows = manifest.filter(data => data.isRepresentativeRun).map(data => {
+              const results = require(data.jsonPath)
+
+              return {
+                URL: results.requestedUrl,
+                Date: new Date(results.fetchTime),
+                UnixTime: (new Date(results.fetchTime).getTime()),
+                FCP: results.audits['first-contentful-paint'].numericValue, 
+                LCP: results.audits['largest-contentful-paint'].numericValue, 
+                TBT: results.audits['total-blocking-time'].numericValue,
+                TTI: results.audits['interactive'].numericValue,
+                CLS: results.audits['cumulative-layout-shift'].numericValue,
+                pageScore: results.categories.performance.score,
+              }
+            })
+
+            await sheet.addRows(rows)
+            
+      # - name: Slack Failure Notification
+      #   uses: rtCamp/action-slack-notify@v2
+      #   if: ${{ failure() }}
+      #   env:
+      #     SLACK_CHANNEL: knxt-performance
+      #     SLACK_COLOR: '#FF0000'
+      #     SLACK_ICON: ':bell:'
+      #     SLACK_MESSAGE: 'Workflow URL: ${{ github.event.workflow_run.html_url }}'
+      #     SLACK_TITLE: ':warning: Performance issue detected'
+      #     SLACK_USERNAME: Performance Bot
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      #
+      # - name: Slack Success Notification
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #     SLACK_CHANNEL: knxt-performance
+      #     SLACK_COLOR: '#008000'
+      #     SLACK_ICON: ':bell:'
+      #     SLACK_MESSAGE: 'Workflow URL: ${{ github.event.workflow_run.html_url }}'
+      #     SLACK_TITLE: ':rocket: No performance issues detected'
+      #     SLACK_USERNAME: Performance Bot
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

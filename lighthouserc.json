@@ -1,0 +1,7 @@
+{
+  "ci": {
+    "collect": {
+      "puppeteerScript": "./lighthouse.puppeteer.js"
+    }
+  }
+}

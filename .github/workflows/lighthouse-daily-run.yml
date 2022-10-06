@@ -1,0 +1,28 @@
+name: Lighthouse CI
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs "At 11:00 on every day-of-week from Monday through Friday"
+    - cron: '0 11 * * 1-5'
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Lighthouse
+        timeout-minutes: 15
+        uses: ./.github/actions/automated-lighthouse
+        env:
+          AUTH_HEADER: ${{ secrets.AUTH_HEADER }}
+        with:
+          urls: |
+            https://staging.knxt.shop
+            https://staging.knxt.shop/landing
+            https://staging.knxt.shop/men/all
+            https://staging.knxt.shop/product/gg-medium-carry-on-duffle
+          budgetPath: ./budget.json
+          lighthousercPath: ./lighthouserc.json
+          googleSpreadsheetId: ${{ secrets.GOOGLE_SPREADSHEET_ID }}
+          googleServiceAccountEmail: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          googlePrivateKey: ${{ secrets.GOOGLE_PRIVATE_KEY }}
