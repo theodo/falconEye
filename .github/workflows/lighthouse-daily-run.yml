@@ -21,8 +21,8 @@ jobs:
             https://staging.knxt.shop/landing
             https://staging.knxt.shop/men/all
             https://staging.knxt.shop/product/gg-medium-carry-on-duffle
-          budgetPath: ./budget.json
-          lighthousercPath: ./lighthouserc.json
+          # budgetPath: ./budget.json # Lighthouse budget file
+          # lighthousercPath: ./lighthouserc.json # Lighthouse configuration file
           googleSpreadsheetId: ${{ secrets.GOOGLE_SPREADSHEET_ID }}
           googleServiceAccountEmail: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
           googlePrivateKey: ${{ secrets.GOOGLE_PRIVATE_KEY }}

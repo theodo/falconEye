@@ -1,0 +1,22 @@
+[
+  {
+    "timings": [
+      {
+        "metric": "interactive",
+        "budget": 8000
+      },
+      {
+        "metric": "first-contentful-paint",
+        "budget": 2000
+      },
+      {
+        "metric": "largest-contentful-paint",
+        "budget": 3000
+      },
+      {
+        "metric": "total-blocking-time",
+        "budget": 400
+      }
+    ]
+  }
+]
