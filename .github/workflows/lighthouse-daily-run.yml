@@ -13,8 +13,6 @@ jobs:
       - name: Run Lighthouse
         timeout-minutes: 15
         uses: ./.github/actions/automated-lighthouse
-        env:
-          AUTH_HEADER: ${{ secrets.AUTH_HEADER }}
         with:
           urls: |
             https://staging.knxt.shop
@@ -26,3 +24,8 @@ jobs:
           googleSpreadsheetId: ${{ secrets.GOOGLE_SPREADSHEET_ID }}
           googleServiceAccountEmail: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
           googlePrivateKey: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          # slackWebhookUrl: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # slackChannel: example-channel
+        # Environment variables injected to the Pupeteer script
+        env:
+          EXAMPLE_ENV: example

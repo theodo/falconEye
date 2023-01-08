@@ -17,6 +17,10 @@ inputs:
   googlePrivateKey:
     description: 'Private key of the google service account to use to authenticate to the google spreadsheet'
     required: true
+  slackWebhookUrl:
+    description: 'Slack webhook URL to send the results to'
+  slackChannel:
+    description: 'Slack channel to send the results to'
 runs:
   using: 'composite'
   steps:
@@ -94,26 +98,26 @@ runs:
             })
 
             await sheet.addRows(rows)
-            
-      # - name: Slack Failure Notification
-      #   uses: rtCamp/action-slack-notify@v2
-      #   if: ${{ failure() }}
-      #   env:
-      #     SLACK_CHANNEL: knxt-performance
-      #     SLACK_COLOR: '#FF0000'
-      #     SLACK_ICON: ':bell:'
-      #     SLACK_MESSAGE: 'Workflow URL: ${{ github.event.workflow_run.html_url }}'
-      #     SLACK_TITLE: ':warning: Performance issue detected'
-      #     SLACK_USERNAME: Performance Bot
-      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      #
-      # - name: Slack Success Notification
-      #   uses: rtCamp/action-slack-notify@v2
-      #   env:
-      #     SLACK_CHANNEL: knxt-performance
-      #     SLACK_COLOR: '#008000'
-      #     SLACK_ICON: ':bell:'
-      #     SLACK_MESSAGE: 'Workflow URL: ${{ github.event.workflow_run.html_url }}'
-      #     SLACK_TITLE: ':rocket: No performance issues detected'
-      #     SLACK_USERNAME: Performance Bot
-      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Slack Failure Notification
+        uses: rtCamp/action-slack-notify@v2
+        if: ${{ inputs.SLACK_WEBHOOK && failure() }}
+        env:
+          SLACK_CHANNEL: ${{ inputs.slackChannel }}
+          SLACK_COLOR: '#FF0000'
+          SLACK_ICON: ':bell:'
+          SLACK_MESSAGE: 'Workflow URL: ${{ github.event.workflow_run.html_url }}'
+          SLACK_TITLE: ':warning: Performance issue detected'
+          SLACK_USERNAME: Performance Bot
+          SLACK_WEBHOOK: ${{ inputs.slackWebhook }}
+
+      - name: Slack Success Notification
+        uses: rtCamp/action-slack-notify@v2
+        if: ${{ inputs.slackWebhook }}
+        env:
+          SLACK_CHANNEL: ${{ inputs.slackChannel }}
+          SLACK_COLOR: '#008000'
+          SLACK_ICON: ':bell:'
+          SLACK_MESSAGE: 'Workflow URL: ${{ github.event.workflow_run.html_url }}'
+          SLACK_TITLE: ':rocket: No performance issues detected'
+          SLACK_USERNAME: Performance Bot
+          SLACK_WEBHOOK: ${{ inputs.slackWebhook }}
