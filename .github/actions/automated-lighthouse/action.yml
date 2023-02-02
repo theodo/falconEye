@@ -47,7 +47,7 @@ runs:
         with:
           urls: ${{ inputs.urls }}
           budgetPath: ${{ inputs.budgetPath }}
-          uploadArtifacts: true # save results as an action artifacts
+          uploadArtifacts: false # save results as an action artifacts
           configPath: ${{ inputs.lighthousercPath }}
           runs: 3
 
