@@ -15,6 +15,16 @@ To create the service account and retrieve the necessary keys, look at the Setup
 
 - Create your own repository by clicking on the `Use template` button
 
+## Setup google sheets and looker studio
+
+- Copy the [**Google sheets template**](https://docs.google.com/spreadsheets/d/1AI5zGbZffgYMa1IIYLm41UHREQk0Jnvl1OSCIDO2KTg/edit?usp=sharing) and rename it.
+- Go to the [**google datastudio datasource template**](https://datastudio.google.com/datasources/ba83773b-7b12-430a-8739-71e5b12ecb2a)
+- Copy the data source by clicking on the Copy icon in the upper menu bar
+- Select the Google Sheets file you just created as the source sheet, select the `Raw Data` sheet and rename the data source
+- Go to the [**google datastudio report template**](https://datastudio.google.com/reporting/bbe25a61-e43e-44a2-927e-7590a340e655) and make a copy 
+- Select the newly created data source as new data source and rename the template
+- You should have a Google DataStudio report connected to your google sheet with one data point
+
 
 ## Setup google sheets service account
 
@@ -38,15 +48,6 @@ To create the service account and retrieve the necessary keys, look at the Setup
     - note your service account's email address (also available in the JSON key file)
 - Share the google sheets you created with your service account using the email noted above
 
-## Setup google sheets and looker studio
-
-- Copy the [**Google sheets template**](https://docs.google.com/spreadsheets/d/1AI5zGbZffgYMa1IIYLm41UHREQk0Jnvl1OSCIDO2KTg/edit?usp=sharing) and rename it.
-- Go to the [**google datastudio datasource template**](https://datastudio.google.com/datasources/ba83773b-7b12-430a-8739-71e5b12ecb2a)
-- Copy the data source by clicking on the Copy icon in the upper menu bar
-- Select the Google Sheets file you just created as the source sheet, select the `Raw Data` sheet and rename the data source
-- Go to the [**google datastudio report template**](https://datastudio.google.com/reporting/bbe25a61-e43e-44a2-927e-7590a340e655) and make a copy 
-- Select the newly created data source as new data source and rename the template
-- You should have a Google DataStudio report connected to your google sheet with one data point
 
 ## Setup daily monitoring
 
