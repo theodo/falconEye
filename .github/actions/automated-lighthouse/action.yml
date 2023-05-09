@@ -43,7 +43,7 @@ runs:
 
       - name: Audit URLs using Lighthouse
         id: lighthouse
-        uses: treosh/lighthouse-ci-action@v9
+        uses: treosh/lighthouse-ci-action@v10
         with:
           urls: ${{ inputs.urls }}
           budgetPath: ${{ inputs.budgetPath }}
