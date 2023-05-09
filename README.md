@@ -1,4 +1,4 @@
-# Automated Lighthouse
+# Falcon Eye
 
 This repositroy contains a script that runs [Lighthouse](https://developers.google.com/web/tools/lighthouse/) on a list of URLs and sends the results to a google datasheet to be analyzed.
 
