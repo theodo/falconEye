@@ -57,7 +57,7 @@ To create the service account and retrieve the necessary keys, look at the Setup
     - Replace the URLs section with the URLs to be monitored (during setup, it is recommended to test only one URL to speed up testing)
     - Merge the code on master
 - Set the following secret values in the Github repository secrets variables:
-    - `GOOGLE_SPREADSHEET_ID`: The google spreadsheet id where the results will be uploaded (The ID is found in the link of the google sheets https://docs.google.com/spreadsheets/d/15vh-k5lYVGhuA-LYFAGPhMiBoTfM85VfXV1snk9DVno/edit)
+    - `GOOGLE_SPREADSHEET_ID`: The google spreadsheet id where the results will be uploaded (The ID is found in the link of the google sheets https://docs.google.com/spreadsheets/d/ID/edit)
     - `GOOGLE_SERVICE_ACCOUNT_EMAIL`: The google service account email generated when creating the service account
     - `GOOGLE_PRIVATE_KEY`: The google private key associated with the created user account
 
