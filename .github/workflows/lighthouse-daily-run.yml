@@ -15,10 +15,8 @@ jobs:
         uses: ./.github/actions/automated-lighthouse
         with:
           urls: |
-            https://staging.knxt.shop
-            https://staging.knxt.shop/landing
-            https://staging.knxt.shop/men/all
-            https://staging.knxt.shop/product/gg-medium-carry-on-duffle
+            https://www.google.com
+            https://www.facebook.com/
           # budgetPath: ./budget.json # Lighthouse budget file
           # lighthousercPath: ./lighthouserc.json # Lighthouse configuration file
           googleSpreadsheetId: ${{ secrets.GOOGLE_SPREADSHEET_ID }}
